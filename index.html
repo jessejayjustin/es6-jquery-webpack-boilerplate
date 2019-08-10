@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=EmulateIE9">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Compound Interest with JavaScript</title>
+  <link rel="stylesheet" type="text/css" href="css/bootstrap.css">
+  <link rel="stylesheet" type="text/css" href="css/custom.css">
+  <link rel="stylesheet" type="text/css" href="css/normalize.css">
+  <link rel="stylesheet" type="text/css" href="css/style.css">
+  <link rel="stylesheet" type="text/css" href="css/css_browser_selector.css">
+
+
+        <!--[if IE]>
+          <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+        <![endif]-->
+
+        <!--[if gt IE 9]>
+          <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+        <![endif]-->
+
+        <!--[if lt IE 9]>
+          <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+        <![endif]-->
+
+        <!--[if lt IE 9]>
+          <script src="js/PIE.js"></script>
+        <![endif]-->
+
+        <script src="css_browser_selector_dev.js" type="text/javascript"></script>
+      </head>
+
+      <body>
+
+        <header class="col-lg-6 col-md-8 col-sm-11 col-xs-11 col-centered">
+          <div class="container-fluid">
+            <div class="row">
+              <div id="title">
+                <h3>Compound Interest with JavaScript</h3>
+                <p>The compound interest formula calculates the amount of interest earned on an account or investment where the amount earned is reinvested. By reinvesting the amount earned, an investment will earn money based on the effect of compounding.</p>
+              </div>
+            </div>
+          </div>
+        </header>
+
+        <div class="col-lg-6 col-md-8 col-sm-11 col-xs-11 col-centered container-fluid select-section clearfix">
+          <h4 class="title">Compound Interest Calculation - Annually</h4>  
+          <div class="row row-section">
+            <div class="col-lg-12 styled-select" />
+            <p>I want to calculate</p>
+            <select class="form-control" id="calc" onchange="calcCI();" />
+            <option value="None">None</option>
+            <option value="Compound Interest">Compound Interest (CI)</option>
+          </select>
+        </div>
+
+        <div class="col-lg-12 mt selectStyled">
+         <p>Interest Compounded</p>
+         <select class="form-control" id="ic" onchange="calcCI();" />
+         <option value="None">None</option>
+         <option value="Annually">Annually</option>
+       </select>
+     </div>
+
+     <div class="col-lg-11 col-md-11 col-sm-11 col-xs-11 mt">
+       <p>Principal or Sum [P]</p>
+       <input class="form-control" id="sum" type="text" onkeyup="calcCI();" />
+     </div>
+
+     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 mt fl">
+      <p>Rate % per Annum [R]</p>
+      <div class="col-lg-11 col-md-11 col-sm-11 col-xs-11 fl">
+        <input class="form-control" id="rate" type="text" onkeyup="calcCI();" />
+      </div>
+      <span class="rate fr">%</span>
+    </div>
+
+    <div class="col-lg-11 col-md-11 col-sm-11 col-xs-11 mt fl">
+     <p>Time Years [n]</p>
+     <input class="form-control" id="year" type="text" onkeyup="calcCI();" />
+   </div>
+
+   <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 mt">
+    <div class="col-lg-9 col-md-9 col-sm-9 col-xs-9">
+      <button class="btn btn-danger btn-block fl" onclick="calcCI()">Calculate</button>
+    </div>
+    <button class="btn btn-sm resBtn fl" onclick="emptyFields()">Reset</button>
+  </div>
+
+
+  <div class="errorMsgs fl">
+    <span id="enterAllFields"></span>
+    <span id="isRateFieldOk"></span>
+  </div>
+</div>
+
+<div class="container-fluid output-section">
+  <div class="row">
+    <div class="col-md-11 col-sm-11 col-xs-11 mt fl">
+      <p>Compound Interest [C.I.]</p>
+      <input class="form-control" id="result" type="text" />
+    </div>
+
+    <div class="col-md-11 col-sm-11 col-xs-11 mt fl">
+     <p>Total Amount</p>
+     <input class="form-control" id="totalAmount" type="text" disabled />
+   </div>
+ </div>
+</div>
+</div>
+
+ <script>
+// PolyfillSection forEach()
+// Production steps of ECMA-262, Edition 5, 15.4.4.18
+// Reference: http://es5.github.io/#x15.4.4.18
+if (!Array.prototype.forEach) {
+
+  Array.prototype.forEach = function(callback/*, thisArg*/) {
+
+    var T, k;
+
+    if (this == null) {
+      throw new TypeError('this is null or not defined');
+    }
+
+    // 1. Let O be the result of calling toObject() passing the
+    // |this| value as the argument.
+    var O = Object(this);
+
+    // 2. Let lenValue be the result of calling the Get() internal
+    // method of O with the argument "length".
+    // 3. Let len be toUint32(lenValue).
+    var len = O.length >>> 0;
+
+    // 4. If isCallable(callback) is false, throw a TypeError exception. 
+    // See: http://es5.github.com/#x9.11
+    if (typeof callback !== 'function') {
+      throw new TypeError(callback + ' is not a function');
+    }
+
+    // 5. If thisArg was supplied, let T be thisArg; else let
+    // T be undefined.
+    if (arguments.length > 1) {
+      T = arguments[1];
+    }
+
+    // 6. Let k be 0.
+    k = 0;
+
+    // 7. Repeat while k < len.
+    while (k < len) {
+
+      var kValue;
+
+      // a. Let Pk be ToString(k).
+      //    This is implicit for LHS operands of the in operator.
+      // b. Let kPresent be the result of calling the HasProperty
+      //    internal method of O with argument Pk.
+      //    This step can be combined with c.
+      // c. If kPresent is true, then
+      if (k in O) {
+
+        // i. Let kValue be the result of calling the Get internal
+        // method of O with argument Pk.
+        kValue = O[k];
+
+        // ii. Call the Call internal method of callback with T as
+        // the this value and argument list containing kValue, k, and O.
+        callback.call(T, kValue, k, O);
+      }
+      // d. Increase k by 1.
+      k++;
+    }
+    // 8. return undefined.
+  };
+}
+
+var selectList = document.querySelectorAll('select');
+var inputList = document.querySelectorAll('input');
+var isRateOk = document.getElementById('isRateFieldOk');
+var helpId = document.getElementById('enterAllFields');
+
+selectList.forEach(function(element, index) { //The forEach() method executes a provided function once for each array element.
+  element.addEventListener('focus', function () {
+    element.style.backgroundColor = "white";
+  });
+  element.addEventListener('blur', function () {
+    element.style.backgroundColor = "#F0F0E7";
+  });
+});
+
+inputList.forEach(function(elm,i){
+  elm.addEventListener('focus', function () {
+    elm.style.backgroundColor = "#E0FFFF";
+  });
+  elm.addEventListener('blur', function () {
+    elm.style.backgroundColor = "#F0F0E7";
+  });
+  elm.addEventListener('keyup', function (event) {
+    return isInputFieldEmpty(elm, i, helpId);
+  });
+});
+
+window.onload = calcCI();  
+
+function calcCI() {
+  var calc = document.getElementById('calc');
+  var ic = document.getElementById('ic');
+  var output = document.getElementById('result');
+  var total = document.getElementById('totalAmount');
+  var p = document.getElementById('sum').value; // Principal or Sum of amount
+  var n = document.getElementById('year').value; // Time Span in years
+  var r = document.getElementById('rate'); // % Rate per annum
+  var typ = 1; 
+  var rpa = r.value;
+  if(!isNaN(rpa)&&!isNaN(p)&&!isNaN(n)) {
+    if(rpa >= 0 && rpa <= 100){
+      if (isRateOk != null)
+      // We need to show a warning
+      // Remove any warnings that may exist
+      while (isRateOk.childNodes[0]){
+        isRateOk.removeChild(isRateOk.childNodes[0]);
+      }
+      //r.style.backgroundColor = "#E0FFFF"
+      if(calc.value === 'Compound Interest') {
+        if(ic.value == 'Annually') {
+          output.disabled = true;
+          output.style.borderWidth = '1px';
+          output.style.borderColor = '#FF6347';
+          output.style.cursor = 'pointer';
+          output.style.backgroundColor = '#B0C4DE';
+          var result = Math.pow(1 + ((rpa/typ)/100), typ * n);
+          var c = p * result; 
+          var e = c-p*100/100; //turned into a decimal by dividing by 100
+          output.value = e.toFixed(2);
+          total.value = c.toFixed(2);
+        } else {
+          return changeOutputStyle(output);
+        }
+      } else {
+        return changeOutputStyle(output);
+      }
+
+    } else {
+
+      if (isRateOk != null)
+      // We need to show a warning
+      // Remove any warnings that may exist
+      while (isRateOk.childNodes[0]){
+        isRateOk.removeChild(isRateOk.childNodes[0]);
+      }
+
+      // Add new warning
+      isRateOk.appendChild(document.createTextNode('Enter Rate of interest up to 100(%)'));
+      r.style.backgroundColor = "#B0C4DE";
+      output.value = null;
+      total.value = null;
+    } 
+  }
+}
+
+function changeOutputStyle(output) {
+ output.disabled = false;
+ output.style.borderWidth = null;
+ output.style.borderColor = null;
+ output.style.cursor = 'pointer';
+ output.style.backgroundColor = '#F0F0E7';
+}
+
+function emptyFields() {
+  inputList.forEach(function(el,index){
+    el.value = '';
+    if(index == 3) {
+      el.disabled = true;
+      el.style.cursor = 'pointer';
+      el.style.backgroundColor = '#B0C4DE';
+      el.style.borderWidth = '1px';
+      el.style.borderColor = '#FF6347';
+    }
+  });
+}
+
+function helperNodeText(inputField, index, helpId, helpMessage) {
+  if(index == 0){
+    return isSumValid(inputField, helpId, helpMessage);
+  } else if (index == 1){
+    return isRateValid(inputField, helpId, helpMessage);
+  } else if (index == 2){
+    return isYearsValid(inputField, helpId, helpMessage);
+  }
+}
+
+function isFieldEmpty(inputField, helpId, helpMessage) {
+  if (inputField.value == '') {
+    if (helpId != null)
+    // We need to show a warning
+    // Remove any warnings that may exist
+    while (helpId.childNodes[0]){
+      helpId.removeChild(helpId.childNodes[0]);
+    }
+    // Add new warning
+    helpId.appendChild(document.createTextNode(helpMessage));
+  } else {
+    // If the right information was entered, clear the help message
+    if (helpId != null)
+
+      // Remove any warnings that may exist
+    while (helpId.childNodes[0]){
+      helpId.removeChild(helpId.childNodes[0]);
+    }
+  }
+}
+
+function isSumValid(inputField, helpId, helpMessage) {
+  inputField.value = inputField.value.replace(/[^\d.]/g,'');
+  if(inputField.value.split('.').length>2){ // The split() method splits a String object into an array of strings by separating the string into substrings
+    inputField.value = inputField.value.replace(/\.+$/,'');
+  }
+  return isFieldEmpty(inputField, helpId, helpMessage);
+}
+
+function isRateValid(inputField, helpId, helpMessage) {
+  inputField.value = inputField.value.replace(/[^\d.]/g,'');
+  if(inputField.value.split('.').length>1){ 
+    inputField.value = '0.';
+  }
+  return isFieldEmpty(inputField, helpId, helpMessage);
+}
+
+function isYearsValid(inputField, helpId, helpMessage) {
+  inputField.value = inputField.value.replace(/[^\d.]/g,'');
+  if(inputField.value.split('.').length>2){ // The split() method splits a String object into an array of strings by separating the string into substrings
+    inputField.value = inputField.value.replace(/\.+$/,'');
+  } else if(inputField.value.length > 5) {
+    inputField.value = '';
+  }
+  return isFieldEmpty(inputField, helpId, helpMessage); 
+}
+
+function isInputFieldEmpty(inputField, index, helpId) {
+  return helperNodeText(inputField, index, helpId, 'Enter all the fields');
+}
+
+</script>
+
+
+<!--[if IE]>
+  <script type='text/javascript' src='js/jquery.html5-placeholder-shim.js'></script>
+  <script type="text/javascript">
+    $.placeholder.shim();
+  </script>
+<![endif]-->
+</body>
+</html>

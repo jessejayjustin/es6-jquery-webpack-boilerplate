@@ -1,0 +1,63 @@
+.mt {
+	margin-top: 25px;
+}
+
+.fr {
+	float: right;
+}
+
+.fl {
+	float: left;
+}
+
+.title {
+	margin-top: 12px;
+}
+
+#totalAmount {
+	border-width: 1px;
+	border-color: #FF6347;
+	cursor: pointer;
+}
+
+.rate {
+	font-size: 16px;
+}
+
+#enterAllFields {
+	color: red;
+}
+
+#isRateFieldOk {
+	color: red;
+}
+
+.errorMsgs {
+	margin-left: 17px;
+}
+
+#rate {
+	margin-left: -15px;
+}
+
+p {
+	font-size: 17px;
+}
+
+input {
+	font-weight: 600;
+}
+
+#title p {
+	font-size: 15px;
+	width: 100%;
+}
+
+#title h3 {
+	font-size: 20px;
+	font-weight: bold;
+	margin-bottom: 5px;
+}
+
+
+
