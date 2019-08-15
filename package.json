@@ -1,0 +1,22 @@
+{
+  "name": "compound-interest-calculator-with-javascript",
+  "version": "0.1.0",
+  "description": "Module",
+  "main": "index.js",
+  "scripts": {
+    "test": "jasmine"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jessejayjustin/compound-interest-calculator-with-javascript.git"
+  },
+  "author": "Jesse Jay",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/jessejayjustin/compound-interest-calculator-with-javascript/issues"
+  },
+  "homepage": "https://github.com/jessejayjustin/compound-interest-calculator-with-javascript#readme",
+  "devDependencies": {
+    "jasmine": "^3.4.0"
+  }
+}
