@@ -13,7 +13,6 @@
   <link rel="stylesheet" type="text/css" href="css/style.css">
   <link rel="stylesheet" type="text/css" href="css/css_browser_selector.css">
 
-
         <!--[if IE]>
           <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
         <![endif]-->
@@ -93,7 +92,7 @@
 
   <div class="errorMsgs fl">
     <span id="enterAllFields"></span>
-    <span id="isRateFieldOk"></span>
+    <span id="rateErr"></span>
   </div>
 </div>
 
@@ -112,185 +111,127 @@
 </div>
 </div>
 
- <script>
-// PolyfillSection forEach()
-// Production steps of ECMA-262, Edition 5, 15.4.4.18
-// Reference: http://es5.github.io/#x15.4.4.18
-if (!Array.prototype.forEach) {
-
-  Array.prototype.forEach = function(callback/*, thisArg*/) {
-
-    var T, k;
-
-    if (this == null) {
-      throw new TypeError('this is null or not defined');
-    }
-
-    // 1. Let O be the result of calling toObject() passing the
-    // |this| value as the argument.
-    var O = Object(this);
-
-    // 2. Let lenValue be the result of calling the Get() internal
-    // method of O with the argument "length".
-    // 3. Let len be toUint32(lenValue).
-    var len = O.length >>> 0;
-
-    // 4. If isCallable(callback) is false, throw a TypeError exception. 
-    // See: http://es5.github.com/#x9.11
-    if (typeof callback !== 'function') {
-      throw new TypeError(callback + ' is not a function');
-    }
-
-    // 5. If thisArg was supplied, let T be thisArg; else let
-    // T be undefined.
-    if (arguments.length > 1) {
-      T = arguments[1];
-    }
-
-    // 6. Let k be 0.
-    k = 0;
-
-    // 7. Repeat while k < len.
-    while (k < len) {
-
-      var kValue;
-
-      // a. Let Pk be ToString(k).
-      //    This is implicit for LHS operands of the in operator.
-      // b. Let kPresent be the result of calling the HasProperty
-      //    internal method of O with argument Pk.
-      //    This step can be combined with c.
-      // c. If kPresent is true, then
-      if (k in O) {
-
-        // i. Let kValue be the result of calling the Get internal
-        // method of O with argument Pk.
-        kValue = O[k];
-
-        // ii. Call the Call internal method of callback with T as
-        // the this value and argument list containing kValue, k, and O.
-        callback.call(T, kValue, k, O);
-      }
-      // d. Increase k by 1.
-      k++;
-    }
-    // 8. return undefined.
-  };
-}
-
-var selectList = document.querySelectorAll('select');
-var inputList = document.querySelectorAll('input');
-var isRateOk = document.getElementById('isRateFieldOk');
-var helpId = document.getElementById('enterAllFields');
-
-selectList.forEach(function(element, index) { //The forEach() method executes a provided function once for each array element.
-  element.addEventListener('focus', function () {
-    element.style.backgroundColor = "white";
-  });
-  element.addEventListener('blur', function () {
-    element.style.backgroundColor = "#F0F0E7";
-  });
-});
-
-inputList.forEach(function(elm,i){
-  elm.addEventListener('focus', function () {
-    elm.style.backgroundColor = "#E0FFFF";
-  });
-  elm.addEventListener('blur', function () {
-    elm.style.backgroundColor = "#F0F0E7";
-  });
-  elm.addEventListener('keyup', function (event) {
-    return isInputFieldEmpty(elm, i, helpId);
-  });
-});
+<script>
 
 window.onload = calcCI();  
 
-function calcCI() {
-  var calc = document.getElementById('calc');
-  var ic = document.getElementById('ic');
-  var output = document.getElementById('result');
-  var total = document.getElementById('totalAmount');
-  var p = document.getElementById('sum').value; // Principal or Sum of amount
-  var n = document.getElementById('year').value; // Time Span in years
-  var r = document.getElementById('rate'); // % Rate per annum
-  var typ = 1; 
-  var rpa = r.value;
-  if(!isNaN(rpa)&&!isNaN(p)&&!isNaN(n)) {
-    if(rpa >= 0 && rpa <= 100){
-      if (isRateOk != null)
-      // We need to show a warning
-      // Remove any warnings that may exist
-      while (isRateOk.childNodes[0]){
-        isRateOk.removeChild(isRateOk.childNodes[0]);
-      }
-      //r.style.backgroundColor = "#E0FFFF"
-      if(calc.value === 'Compound Interest') {
-        if(ic.value == 'Annually') {
-          output.disabled = true;
-          output.style.borderWidth = '1px';
-          output.style.borderColor = '#FF6347';
-          output.style.cursor = 'pointer';
-          output.style.backgroundColor = '#B0C4DE';
-          var result = Math.pow(1 + ((rpa/typ)/100), typ * n);
-          var c = p * result; 
-          var e = c-p*100/100; //turned into a decimal by dividing by 100
-          output.value = e.toFixed(2);
-          total.value = c.toFixed(2);
-        } else {
-          return changeOutputStyle(output);
-        }
-      } else {
-        return changeOutputStyle(output);
-      }
+var selectList = document.querySelectorAll('select');
+var inputList = document.querySelectorAll('input');
+var rateError = document.getElementById('rateErr');
+var helpId = document.getElementById('enterAllFields');
 
-    } else {
-
-      if (isRateOk != null)
-      // We need to show a warning
-      // Remove any warnings that may exist
-      while (isRateOk.childNodes[0]){
-        isRateOk.removeChild(isRateOk.childNodes[0]);
-      }
-
-      // Add new warning
-      isRateOk.appendChild(document.createTextNode('Enter Rate of interest up to 100(%)'));
-      r.style.backgroundColor = "#B0C4DE";
-      output.value = null;
-      total.value = null;
-    } 
-  }
-}
-
-function changeOutputStyle(output) {
- output.disabled = false;
- output.style.borderWidth = null;
- output.style.borderColor = null;
- output.style.cursor = 'pointer';
- output.style.backgroundColor = '#F0F0E7';
-}
-
-function emptyFields() {
-  inputList.forEach(function(el,index){
-    el.value = '';
-    if(index == 3) {
-      el.disabled = true;
-      el.style.cursor = 'pointer';
-      el.style.backgroundColor = '#B0C4DE';
-      el.style.borderWidth = '1px';
-      el.style.borderColor = '#FF6347';
-    }
+for(let i = 0; i < selectList.length; i++) {
+  selectList[i].addEventListener('focus', function () {
+    selectList[i].style.backgroundColor = "white";
+  });
+  selectList[i].addEventListener('blur', function () {
+    selectList[i].style.backgroundColor = "#F0F0E7";
   });
 }
 
-function helperNodeText(inputField, index, helpId, helpMessage) {
-  if(index == 0){
-    return isSumValid(inputField, helpId, helpMessage);
-  } else if (index == 1){
-    return isRateValid(inputField, helpId, helpMessage);
-  } else if (index == 2){
-    return isYearsValid(inputField, helpId, helpMessage);
+function calcCI() {
+  let calc = document.getElementById('calc');
+  let ic = document.getElementById('ic');
+  let res = document.getElementById('result');
+  let total = document.getElementById('totalAmount');
+  let p = document.getElementById('sum').value; // Principal or Sum of amount
+  let n = document.getElementById('year').value; // Time Span in years
+  let r = document.getElementById('rate'); // % Rate per annum
+  let typ = 1; 
+  let rpa = r.value;
+  function rateCheck() {
+    if(!isNaN(rpa)&&!isNaN(p)&&!isNaN(n)) {
+      if(rpa >= 0 && rpa <= 100){
+        if (rateErr != null)
+        // Remove any warnings that may exist
+        while (rateErr.childNodes[0]){
+          rateErr.removeChild(rateErr.childNodes[0]);
+        }
+        return rpa;
+      } else {
+        if (rateErr != null)
+        // We need to show a warning
+        // Remove any warnings that may exist
+        while (rateErr.childNodes[0]){
+          rateErr.removeChild(rateErr.childNodes[0]);
+        }
+        // Add new warning
+        rateErr.appendChild(document.createTextNode('Enter Rate of interest up to 100(%)'));
+        r.style.backgroundColor = "#B0C4DE";
+        res.value = null;
+        total.value = null;
+        return false;
+      } 
+    }
   }
+  var rc = rateCheck();
+  if(calc.value === 'Compound Interest') {
+    return calcCInterest(ic,res,total,p,n,r,typ,rc);
+  } else {
+    return changeResStyle(res);
+  }
+}
+
+
+function calcCInterest(ic,res,total,p,n,r,typ,rpa) {
+  if(ic.value === 'Annually') {
+    let result = Math.pow(1 + ((rpa/typ)/100), typ * n);
+    let c = p * result; 
+    let e = c-p*100/100; //turned into a decimal by dividing by 100
+    res.value = e.toFixed(2);
+    total.value = c.toFixed(2);
+    return editResStyle(res);
+  } else {
+    return changeResStyle(res);
+  }
+}
+
+function editResStyle(res) {
+ res.disabled = true;
+ res.style.borderWidth = '1px';
+ res.style.borderColor = '#FF6347';
+ res.style.cursor = 'pointer';
+ res.style.backgroundColor = '#B0C4DE';
+}
+
+function changeResStyle(res) {
+ res.disabled = false;
+ res.style.borderWidth = null;
+ res.style.borderColor = null;
+ res.style.cursor = 'pointer';
+ res.style.backgroundColor = '#F0F0E7';
+}
+
+function emptyFields() {
+  for(let i = 0; i < inputList.length; i++) {
+    inputList[i].value = '';
+    inputList[3].disabled = true;
+    inputList[3].style.cursor = 'pointer';
+    inputList[3].style.backgroundColor = '#B0C4DE';
+    inputList[3].style.borderWidth = '1px';
+    inputList[3].style.borderColor = '#FF6347';
+  }
+}
+
+for(let i = 0; i < inputList.length; i++) {
+  inputList[i].addEventListener('focus', function () {
+    inputList[i].style.backgroundColor = "#E0FFFF";
+  });
+  inputList[i].addEventListener('blur', function () {
+    inputList[i].style.backgroundColor = "#F0F0E7";
+  });
+  inputList[i].addEventListener('blur', function () {
+    inputList[i].style.backgroundColor = "#F0F0E7";
+  });
+  inputList[0].addEventListener('keyup', function () {
+    return isSumOk(inputList[0],helpId);
+  });
+  inputList[1].addEventListener('keyup', function () {
+    return isRateOk(inputList[1],helpId);
+  });
+  inputList[2].addEventListener('keyup', function () {
+    return isYearOk(inputList[2],helpId);
+  });
 }
 
 function isFieldEmpty(inputField, helpId, helpMessage) {
@@ -302,7 +243,7 @@ function isFieldEmpty(inputField, helpId, helpMessage) {
       helpId.removeChild(helpId.childNodes[0]);
     }
     // Add new warning
-    helpId.appendChild(document.createTextNode(helpMessage));
+    helpId.appendChild(document.createTextNode('Enter all the fields'));
   } else {
     // If the right information was entered, clear the help message
     if (helpId != null)
@@ -314,7 +255,7 @@ function isFieldEmpty(inputField, helpId, helpMessage) {
   }
 }
 
-function isSumValid(inputField, helpId, helpMessage) {
+function isSumOk(inputField, helpId, helpMessage) {
   inputField.value = inputField.value.replace(/[^\d.]/g,'');
   if(inputField.value.split('.').length>2){ // The split() method splits a String object into an array of strings by separating the string into substrings
     inputField.value = inputField.value.replace(/\.+$/,'');
@@ -322,7 +263,7 @@ function isSumValid(inputField, helpId, helpMessage) {
   return isFieldEmpty(inputField, helpId, helpMessage);
 }
 
-function isRateValid(inputField, helpId, helpMessage) {
+function isRateOk(inputField, helpId, helpMessage) {
   inputField.value = inputField.value.replace(/[^\d.]/g,'');
   if(inputField.value.split('.').length>1){ 
     inputField.value = '0.';
@@ -330,7 +271,7 @@ function isRateValid(inputField, helpId, helpMessage) {
   return isFieldEmpty(inputField, helpId, helpMessage);
 }
 
-function isYearsValid(inputField, helpId, helpMessage) {
+function isYearOk(inputField, helpId, helpMessage) {
   inputField.value = inputField.value.replace(/[^\d.]/g,'');
   if(inputField.value.split('.').length>2){ // The split() method splits a String object into an array of strings by separating the string into substrings
     inputField.value = inputField.value.replace(/\.+$/,'');
@@ -340,13 +281,7 @@ function isYearsValid(inputField, helpId, helpMessage) {
   return isFieldEmpty(inputField, helpId, helpMessage); 
 }
 
-function isInputFieldEmpty(inputField, index, helpId) {
-  return helperNodeText(inputField, index, helpId, 'Enter all the fields');
-}
-
 </script>
-
-
 <!--[if IE]>
   <script type='text/javascript' src='js/jquery.html5-placeholder-shim.js'></script>
   <script type="text/javascript">
