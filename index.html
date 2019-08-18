@@ -1,287 +1,115 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-  <meta charset="utf-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=EmulateIE9">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Compound Interest with JavaScript</title>
-  <link rel="stylesheet" type="text/css" href="css/bootstrap.css">
-  <link rel="stylesheet" type="text/css" href="css/custom.css">
-  <link rel="stylesheet" type="text/css" href="css/normalize.css">
-  <link rel="stylesheet" type="text/css" href="css/style.css">
-  <link rel="stylesheet" type="text/css" href="css/css_browser_selector.css">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=EmulateIE9">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Compound Interest with JavaScript</title>
+    <link rel="stylesheet" type="text/css" href="css/bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="css/custom.css">
+    <link rel="stylesheet" type="text/css" href="css/normalize.css">
+    <link rel="stylesheet" type="text/css" href="css/style.css">
+    <link rel="stylesheet" type="text/css" href="css/css_browser_selector.css">
+    <link rel="stylesheet" href="js/qunit/qunit.css">
 
-        <!--[if IE]>
-          <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
-        <![endif]-->
+    <!--[if IE]>
+      <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <![endif]-->
 
-        <!--[if gt IE 9]>
-          <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
-        <![endif]-->
+    <!--[if gt IE 9]>
+      <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <![endif]-->
 
-        <!--[if lt IE 9]>
-          <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
-        <![endif]-->
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
 
-        <!--[if lt IE 9]>
-          <script src="js/PIE.js"></script>
-        <![endif]-->
+    <!--[if lt IE 9]>
+      <script src="js/PIE.js"></script>
+    <![endif]-->
+</head>
 
-        <script src="css_browser_selector_dev.js" type="text/javascript"></script>
-      </head>
+  <body>
 
-      <body>
-
-        <header class="col-lg-6 col-md-8 col-sm-11 col-xs-11 col-centered">
-          <div class="container-fluid">
-            <div class="row">
-              <div id="title">
-                <h3>Compound Interest with JavaScript</h3>
-                <p>Compound Interest (CI) is the addition of Interest to the Initial principal value and also the accumulated interest of previous periods of a loan or any deposit.</p>
-              </div>
-            </div>
+    <header class="col-lg-6 col-md-8 col-sm-11 col-xs-11 col-centered">
+      <div class="container-fluid">
+        <div class="row">
+          <div id="title">
+            <h3>Compound Interest with JavaScript</h3>
+            <p>Compound Interest (CI) is the addition of Interest to the Initial principal value and also the accumulated interest of previous periods of a loan or any deposit.</p>
           </div>
-        </header>
+        </div>
+      </div>
+    </header>
 
-        <div class="col-lg-6 col-md-8 col-sm-11 col-xs-11 col-centered container-fluid select-section clearfix">
-          <h4 class="title">Compound Interest Calculation - Annually</h4>  
-          <div class="row row-section">
-            <div class="col-lg-12 styled-select" />
-            <p>I want to calculate</p>
-            <select class="form-control" id="calc" onchange="calcCI();" />
+    <div class="col-lg-6 col-md-8 col-sm-11 col-xs-11 col-centered container-fluid select-section clearfix">
+      <h4 class="title">Compound Interest Calculation - Annually</h4>  
+      <div class="row row-section">
+        <div class="col-lg-12 styled-select" />
+          <p>I want to calculate</p>
+          <select class="form-control" id="calcTyp" onchange="calc.calculateDiff();" />
             <option value="Select">Select</option>
             <option value="Compound Interest">Compound Interest (CI)</option>
           </select>
         </div>
 
         <div class="col-lg-12 mt selectStyled">
-         <p>Interest Compounded</p>
-         <select class="form-control" id="ic" onchange="calcCI();" />
-         <option value="Select">Select</option>
-         <option value="Annually">Annually</option>
-       </select>
-     </div>
+          <p>Interest Compounded</p>
+          <select class="form-control" id="ic" onchange="calc.calculateDiff();" />
+            <option value="Select">Select</option>
+            <option value="Annually">Annually</option>
+          </select>
+        </div>
 
-     <div class="col-lg-11 col-md-11 col-sm-11 col-xs-11 mt">
-       <p>Principal or Sum [P]</p>
-       <input class="form-control" id="sum" type="text" onkeyup="calcCI();" />
-     </div>
+        <div class="col-lg-11 col-md-11 col-sm-11 col-xs-11 mt">
+          <p>Principal or Sum [P]</p>
+          <input class="form-control" id="sum" type="text" onkeyup="calc.calculateDiff();" />
+        </div>
 
-     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 mt fl">
-      <p>Rate % per Annum [R]</p>
-      <div class="col-lg-11 col-md-11 col-sm-11 col-xs-11 fl">
-        <input class="form-control" id="rate" type="text" onkeyup="calcCI();" />
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 mt fl">
+          <p>Rate % per Annum [R]</p>
+            <div class="col-lg-11 col-md-11 col-sm-11 col-xs-11 fl">
+              <input class="form-control" id="rate" type="text" onkeyup="calc.calculateDiff();" />
+            </div>
+          <span class="rate fr">%</span>
+        </div>
+
+        <div class="col-lg-11 col-md-11 col-sm-11 col-xs-11 mt fl">
+          <p>Time Years [n]</p>
+          <input class="form-control" id="year" type="text" onkeyup="calc.calculateDiff();" />
+        </div>
+
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 mt">
+          <div class="col-lg-9 col-md-9 col-sm-9 col-xs-9">
+            <button class="btn btn-danger btn-block fl" onclick="calc.calculateDiff()">Calculate</button>
+          </div>
+          <button class="btn btn-sm resBtn fl" onclick="calc.emptyFields()">Reset</button>
+        </div>
+
+        <div class="errorMsgs fl">
+          <span id="enterAllFields"></span>
+          <span id="rateErr"></span>
+        </div>
       </div>
-      <span class="rate fr">%</span>
+
+      <div class="container-fluid output-section">
+        <div class="row">
+          <div class="col-md-11 col-sm-11 col-xs-11 mt fl">
+            <p>Compound Interest [C.I.]</p>
+            <input class="form-control" id="result" type="text" />
+          </div>
+          <div class="col-md-11 col-sm-11 col-xs-11 mt fl">
+            <p>Total Amount</p>
+            <input class="form-control" id="totalAmount" type="text" disabled />
+          </div>
+        </div>
+      </div>
     </div>
-
-    <div class="col-lg-11 col-md-11 col-sm-11 col-xs-11 mt fl">
-     <p>Time Years [n]</p>
-     <input class="form-control" id="year" type="text" onkeyup="calcCI();" />
-   </div>
-
-   <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 mt">
-    <div class="col-lg-9 col-md-9 col-sm-9 col-xs-9">
-      <button class="btn btn-danger btn-block fl" onclick="calcCI()">Calculate</button>
-    </div>
-    <button class="btn btn-sm resBtn fl" onclick="emptyFields()">Reset</button>
-  </div>
-
-
-  <div class="errorMsgs fl">
-    <span id="enterAllFields"></span>
-    <span id="rateErr"></span>
-  </div>
-</div>
-
-<div class="container-fluid output-section">
-  <div class="row">
-    <div class="col-md-11 col-sm-11 col-xs-11 mt fl">
-      <p>Compound Interest [C.I.]</p>
-      <input class="form-control" id="result" type="text" />
-    </div>
-
-    <div class="col-md-11 col-sm-11 col-xs-11 mt fl">
-     <p>Total Amount</p>
-     <input class="form-control" id="totalAmount" type="text" disabled />
-   </div>
- </div>
-</div>
-</div>
-
-<script>
-
-window.onload = calcCI();  
-
-var selectList = document.querySelectorAll('select');
-var inputList = document.querySelectorAll('input');
-var rateError = document.getElementById('rateErr');
-var helpId = document.getElementById('enterAllFields');
-
-for(let i = 0; i < selectList.length; i++) {
-  selectList[i].addEventListener('focus', function () {
-    selectList[i].style.backgroundColor = "white";
-  });
-  selectList[i].addEventListener('blur', function () {
-    selectList[i].style.backgroundColor = "#F0F0E7";
-  });
-}
-
-function calcCI() {
-  let calc = document.getElementById('calc');
-  let ic = document.getElementById('ic');
-  let res = document.getElementById('result');
-  let total = document.getElementById('totalAmount');
-  let p = document.getElementById('sum').value; // Principal or Sum of amount
-  let n = document.getElementById('year').value; // Time Span in years
-  let r = document.getElementById('rate'); // % Rate per annum
-  let typ = 1; 
-  let rpa = r.value;
-  function rateCheck() {
-    if(!isNaN(rpa)&&!isNaN(p)&&!isNaN(n)) {
-      if(rpa >= 0 && rpa <= 100){
-        if (rateErr != null)
-        // Remove any warnings that may exist
-        while (rateErr.childNodes[0]){
-          rateErr.removeChild(rateErr.childNodes[0]);
-        }
-        return rpa;
-      } else {
-        if (rateErr != null)
-        // We need to show a warning
-        // Remove any warnings that may exist
-        while (rateErr.childNodes[0]){
-          rateErr.removeChild(rateErr.childNodes[0]);
-        }
-        // Add new warning
-        rateErr.appendChild(document.createTextNode('Enter Rate of interest up to 100(%)'));
-        r.style.backgroundColor = "#B0C4DE";
-        res.value = null;
-        total.value = null;
-        return false;
-      } 
-    }
-  }
-  var rc = rateCheck();
-  if(calc.value === 'Compound Interest') {
-    return calcCInterest(ic,res,total,p,n,r,typ,rc);
-  } else {
-    return changeResStyle(res);
-  }
-}
-
-
-function calcCInterest(ic,res,total,p,n,r,typ,rpa) {
-  if(ic.value === 'Annually') {
-    let result = Math.pow(1 + ((rpa/typ)/100), typ * n);
-    let c = p * result; 
-    let e = c-p*100/100; //turned into a decimal by dividing by 100
-    res.value = e.toFixed(2);
-    total.value = c.toFixed(2);
-    return editResStyle(res);
-  } else {
-    return changeResStyle(res);
-  }
-}
-
-function editResStyle(res) {
- res.disabled = true;
- res.style.borderWidth = '1px';
- res.style.borderColor = '#FF6347';
- res.style.cursor = 'pointer';
- res.style.backgroundColor = '#B0C4DE';
-}
-
-function changeResStyle(res) {
- res.disabled = false;
- res.style.borderWidth = null;
- res.style.borderColor = null;
- res.style.cursor = 'pointer';
- res.style.backgroundColor = '#F0F0E7';
-}
-
-function emptyFields() {
-  for(let i = 0; i < inputList.length; i++) {
-    inputList[i].value = '';
-    inputList[3].disabled = true;
-    inputList[3].style.cursor = 'pointer';
-    inputList[3].style.backgroundColor = '#B0C4DE';
-    inputList[3].style.borderWidth = '1px';
-    inputList[3].style.borderColor = '#FF6347';
-  }
-}
-
-for(let i = 0; i < inputList.length; i++) {
-  inputList[i].addEventListener('focus', function () {
-    inputList[i].style.backgroundColor = "#E0FFFF";
-  });
-  inputList[i].addEventListener('blur', function () {
-    inputList[i].style.backgroundColor = "#F0F0E7";
-  });
-  inputList[i].addEventListener('blur', function () {
-    inputList[i].style.backgroundColor = "#F0F0E7";
-  });
-  inputList[0].addEventListener('keyup', function () {
-    return isSumOk(inputList[0],helpId);
-  });
-  inputList[1].addEventListener('keyup', function () {
-    return isRateOk(inputList[1],helpId);
-  });
-  inputList[2].addEventListener('keyup', function () {
-    return isYearOk(inputList[2],helpId);
-  });
-}
-
-function isFieldEmpty(inputField, helpId, helpMessage) {
-  if (inputField.value == '') {
-    if (helpId != null)
-    // We need to show a warning
-    // Remove any warnings that may exist
-    while (helpId.childNodes[0]){
-      helpId.removeChild(helpId.childNodes[0]);
-    }
-    // Add new warning
-    helpId.appendChild(document.createTextNode('Enter all the fields'));
-  } else {
-    // If the right information was entered, clear the help message
-    if (helpId != null)
-
-      // Remove any warnings that may exist
-    while (helpId.childNodes[0]){
-      helpId.removeChild(helpId.childNodes[0]);
-    }
-  }
-}
-
-function isSumOk(inputField, helpId, helpMessage) {
-  inputField.value = inputField.value.replace(/[^\d.]/g,'');
-  if(inputField.value.split('.').length>2){ // The split() method splits a String object into an array of strings by separating the string into substrings
-    inputField.value = inputField.value.replace(/\.+$/,'');
-  }
-  return isFieldEmpty(inputField, helpId, helpMessage);
-}
-
-function isRateOk(inputField, helpId, helpMessage) {
-  inputField.value = inputField.value.replace(/[^\d.]/g,'');
-  if(inputField.value.split('.').length>1){ 
-    inputField.value = '0.';
-  }
-  return isFieldEmpty(inputField, helpId, helpMessage);
-}
-
-function isYearOk(inputField, helpId, helpMessage) {
-  inputField.value = inputField.value.replace(/[^\d.]/g,'');
-  if(inputField.value.split('.').length>2){ // The split() method splits a String object into an array of strings by separating the string into substrings
-    inputField.value = inputField.value.replace(/\.+$/,'');
-  } else if(inputField.value.length > 5) {
-    inputField.value = '';
-  }
-  return isFieldEmpty(inputField, helpId, helpMessage); 
-}
-
-</script>
+<script src="js/jquery-3.1.1.min.js"></script>
+<script src="qunit-2.9.2.js"></script>
+<script src="js/Utils.js"></script>
+<script src="css_browser_selector_dev.js" type="text/javascript"></script>
 <!--[if IE]>
   <script type='text/javascript' src='js/jquery.html5-placeholder-shim.js'></script>
   <script type="text/javascript">
