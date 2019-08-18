@@ -2,10 +2,12 @@
 
 ## Scaffolding
 
-* Principal Calculation
-* [Redux](https://redux.js.org/introduction/getting-started) - A framework for application state management
-* [Jest](https://github.com/facebook/jest) - A comprehensive JavaScript testing solution
-* [Enzyme](https://github.com/airbnb/enzyme) - A JavaScript Testing utility for React 
+* To calculate if principal amount selected
+* To calculate if rate of interest selected
+* To calculate if half-yearly selected
+* To calculate if quarterly selected
+* BDD Test
+* Cross browser support
 
 
 ![](resources/ci_calc.gif)
