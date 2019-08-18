@@ -1,3 +1,3 @@
 # Compound Interest Calculator with JavaScript
 
-![](ci_calc.gif)
+![](resources/ci_calc.gif)
