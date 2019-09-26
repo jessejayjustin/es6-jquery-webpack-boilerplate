@@ -83,7 +83,7 @@ npm run dev (Run Dev Environment)
 
 - [`html-webpack-plugin`](https://webpack.js.org/plugins/html-webpack-plugin/) - simplifies creation of HTML files to serve your webpack bundles.
 - [`mini-css-extract-plugin`](https://webpack.js.org/plugins/mini-css-extract-plugin/) - extracts CSS into separate files.
-- (https://webpack.js.org/plugins/provide-plugin/) - Automatically load modules instead of having to import or require them everywhere.
+- https://webpack.js.org/plugins/provide-plugin/ - Automatically load modules instead of having to import or require them everywhere.
 
 ## Author
 
